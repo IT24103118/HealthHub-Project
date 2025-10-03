@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useApp } from '../context/AppContext'; // Corrected import
+import { useApp } from '../context/AppContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -9,7 +9,7 @@ const Login = () => {
     password: '',
   });
 
-  const { login } = useApp(); // Use the custom hook
+  const { login } = useApp();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,8 +20,9 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      // CORRECTED: Send 'email' and 'password' fields explicitly
       const response = await axios.post('http://localhost:8080/login', {
-        username: formData.email,
+        email: formData.email,
         password: formData.password,
       });
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map; // Import the Map class
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -36,8 +37,9 @@ public class SignupController {
         return userRepository.findById(id)
                 .map(user -> {
                     user.setUsername(newUser.getUsername());
-                    user.setEmail(newUser.getEmail()); // Ensure you update email
+                    user.setEmail(newUser.getEmail());
                     user.setPassword(newUser.getPassword());
+                    user.setAge(newUser.getAge());
                     return userRepository.save(user);
                 }).orElseThrow(() -> new UserNotFoundException(id));
     }
@@ -51,17 +53,19 @@ public class SignupController {
         return "User with id " + id + " has been deleted successfully.";
     }
 
+    // --- THIS IS THE CORRECTED LOGIN METHOD ---
     @PostMapping("/login")
-    User login(@RequestBody User loginUser) {
-        // CORRECTED LOGIC: Find the user by their email address.
-        // The frontend sends the email in the 'username' field of the request, so we use that.
-        User user = userRepository.findByEmail(loginUser.getUsername());
+    public User login(@RequestBody Map<String, String> credentials) {
+        String email = credentials.get("email");
+        String password = credentials.get("password");
+        
+        User user = userRepository.findByEmail(email);
 
-        if (user != null && user.getPassword().equals(loginUser.getPassword())) {
+        if (user != null && user.getPassword().equals(password)) {
             return user; // Success
+        } else {
+            // If user not found or password doesn't match, throw an exception
+            throw new UserNotFoundException(0L);
         }
-
-        // If login fails, throw an exception
-        throw new UserNotFoundException(0L);
     }
 }

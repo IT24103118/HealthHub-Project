@@ -7,8 +7,8 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(); // Call the corrected logout function from our context
-    navigate('/login'); // Redirect to the login page after logging out
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -22,7 +22,6 @@ const Navbar = () => {
           </div>
           <div className="flex items-center">
             {user ? (
-              // If user is logged in, show their name and a logout button
               <>
                 <span className="text-gray-300 mr-4">
                   Welcome, {user.username}
@@ -35,7 +34,6 @@ const Navbar = () => {
                 </button>
               </>
             ) : (
-              // If no user is logged in, show login and signup links
               <>
                 <Link
                   to="/login"
