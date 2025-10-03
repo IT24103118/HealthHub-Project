@@ -2,15 +2,8 @@ package BackEnd.repository;
 
 import BackEnd.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import java.util.Optional;
 
-@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    
-    Optional<User> findByEmail(String email);
-    
-    boolean existsByEmail(String email);
-    
-    Optional<User> findByEmailAndPassword(String email, String password);
+    // This now correctly searches by the 'email' field, which exists in your User model.
+    User findByEmail(String email);
 }

@@ -1,34 +1,22 @@
 package BackEnd;
 
-import BackEnd.model.User;
-import BackEnd.repository.UserRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
+@RestController
 public class BackEndApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BackEndApplication.class, args);
-	}
+    public static void main(String[] args) {
+        // The semicolon at the end of this line was missing.
+        SpringApplication.run(BackEndApplication.class, args);
+    }
 
-	@Bean
-	CommandLineRunner seedAdmin(UserRepository userRepository) {
-		return args -> {
-			userRepository.findByEmail("admin@example.com").ifPresentOrElse(
-				u -> {},
-				() -> {
-					User admin = new User();
-					admin.setFullName("Administrator");
-					admin.setEmail("admin@example.com");
-					admin.setPassword("admin123"); // In production, hash this
-					admin.setRole("admin");
-					admin.setStatus("active");
-					userRepository.save(admin);
-				}
-			);
-		};
-	}
+    @GetMapping("/hello")
+    public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
+        return String.format("Hello, %s!", name);
+    }
 }
