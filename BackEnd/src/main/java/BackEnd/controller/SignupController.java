@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map; // Import the Map class
+import java.util.Map;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -16,7 +16,7 @@ public class SignupController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     User newUser(@RequestBody User newUser) {
         return userRepository.save(newUser);
     }
@@ -26,6 +26,21 @@ public class SignupController {
         return userRepository.findAll();
     }
 
+    @PostMapping("/login")
+    public User login(@RequestBody Map<String, String> credentials) {
+        String email = credentials.get("email");
+        String password = credentials.get("password");
+        
+        User user = userRepository.findByEmail(email);
+
+        if (user != null && user.getPassword().equals(password)) {
+            return user; // Success
+        } else {
+            throw new UserNotFoundException(0L);
+        }
+    }
+    
+    // Other functions can remain below...
     @GetMapping("/user/{id}")
     User getUserById(@PathVariable Long id) {
         return userRepository.findById(id)
@@ -51,21 +66,5 @@ public class SignupController {
         }
         userRepository.deleteById(id);
         return "User with id " + id + " has been deleted successfully.";
-    }
-
-    // --- THIS IS THE CORRECTED LOGIN METHOD ---
-    @PostMapping("/login")
-    public User login(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
-        String password = credentials.get("password");
-        
-        User user = userRepository.findByEmail(email);
-
-        if (user != null && user.getPassword().equals(password)) {
-            return user; // Success
-        } else {
-            // If user not found or password doesn't match, throw an exception
-            throw new UserNotFoundException(0L);
-        }
     }
 }

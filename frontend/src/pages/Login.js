@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      // CORRECTED: Send 'email' and 'password' fields explicitly
+      // This sends the data in the clean format the backend now expects
       const response = await axios.post('http://localhost:8080/login', {
         email: formData.email,
         password: formData.password,
@@ -51,7 +51,7 @@ const Login = () => {
               name="email"
               type="email"
               required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm"
               value={formData.email}
               onChange={handleChange}
             />
@@ -68,7 +68,7 @@ const Login = () => {
               name="password"
               type="password"
               required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm"
               value={formData.password}
               onChange={handleChange}
             />
@@ -76,7 +76,7 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
             >
               Log in
             </button>
