@@ -1,96 +1,86 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useApp } from '../context/AppContext';
+import { Link, useNavigate } from 'react-router-dom'; // 1. IMPORT useNavigate
 
-const Login = () => {
-  const [formData, setFormData] = useState({
+export default function Login() {
+  
+  let navigate = useNavigate(); // 2. INITIALIZE useNavigate
+
+  const [credentials, setCredentials] = useState({
     email: '',
     password: '',
   });
 
-  const { login } = useApp();
-  const navigate = useNavigate();
+  const { email, password } = credentials;
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onInputChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      // This sends the data in the clean format the backend now expects
-      const response = await axios.post('http://localhost:8080/login', {
-        email: formData.email,
-        password: formData.password,
-      });
+      const response = await axios.post('http://localhost:8080/login', credentials);
+      console.log('Login successful:', response.data);
+      alert('Login successful!');
+      
+      // 3. NAVIGATE to the home page on success
+      navigate('/'); 
 
-      if (response.data) {
-        login(response.data);
-        alert('Login successful!');
-        navigate('/dashboard');
-      }
     } catch (error) {
-      console.error('Login failed!', error);
-      alert('Login failed. Please check your email and password.');
+      console.error('Login failed:', error);
+      alert('Login failed! Please check your credentials.');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900">Log in to your account</h2>
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email" className="text-sm font-medium text-gray-700">
-              Email address
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
-            >
-              Log in
+    <div className="container">
+      <div className="row">
+        <div className="col-md-6 offset-md-3 border rounded p-4 mt-2 shadow">
+          <h2 className="text-center m-4">Login</h2>
+          <form onSubmit={(e) => onSubmit(e)}>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                E-mail
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                placeholder="Enter your e-mail"
+                name="email"
+                value={email}
+                onChange={(e) => onInputChange(e)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Enter your password"
+                name="password"
+                value={password}
+                onChange={(e) => onInputChange(e)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-outline-primary">
+              Login
             </button>
-          </div>
-        </form>
-        <p className="text-sm text-center text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
-            Sign up
-          </Link>
-        </p>
+            <Link className="btn btn-outline-danger mx-2" to="/">
+              Cancel
+            </Link>
+            <div className="mt-3">
+              <p>
+                Don't have an account? <Link to="/signup">Register here</Link>
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
-};
-
-export default Login;
+}
