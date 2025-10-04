@@ -3,19 +3,19 @@ package BackEnd.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.Table; // Make sure this import is added
 
 @Entity
-@Table(name = "user")
+@Table(name = "user") // This line forces the app to use the table named "user"
 public class User {
 
     @Id
     @GeneratedValue
     private Long id;
-
-    // This is the fix: Changed 'int' to 'Integer' to allow this field to be optional (null)
+    
+    // Changed to Integer to allow this field to be optional (null), preventing crashes
     private Integer age; 
-
+    
     private String username;
     private String email;
     private String password;
